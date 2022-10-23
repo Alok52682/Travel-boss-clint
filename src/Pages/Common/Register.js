@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Routers/UserContext';
 
 const Register = () => {
@@ -8,7 +8,10 @@ const Register = () => {
     const [userProfile, setUserProfile] = useState({
         email: "",
         password: "",
-    })
+    });
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/';
 
     const handelRegister = event => {
         event.preventDefault();
@@ -28,15 +31,16 @@ const Register = () => {
                 updateUserProfile(username, photoURL)
                     .then(() => { })
                     .catch(error => console.log('error', error))
+                navigate(from, { replace: true });
                 form.reset();
             })
             .catch(error => console.log('error', error))
-        form.reset();
     }
 
     const handelOnChangeEmail = event => {
-        const email = event.target.value;
+        let email = event.target.value;
         setUserProfile({ ...userProfile, email: email });
+        email = "";
     }
     const handelOnChangePassword = event => {
         const email = event.target.value;
